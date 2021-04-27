@@ -1,50 +1,99 @@
-#type conversion, one liner
-print(type(int(str(8277364))))
+// test arrays
+const alphaArrayFour = ["hello", "world", "hello", "again", "texas", "hello", "insane", "hello", "hello"];
 
-#type conversion, 4 liner
-alpha_one = str(8277364)
-omega_two = int(alpha_one)
-sigma_three = type(omega_two)
-print(sigma_three)
+const occStr = "death is born from killers. we kill with the killers and we drink their blood. along the way, killers have spread death! killers have plundered. we are the dead killers?!! if the sun rises, you know we are the blood drenched killers from hell... we are awaiting a horrible death, one that is fit for barbaric hellish (killers)";
+
+//problem one.... sort the numbers accurately, ascending and descending. 
+// ascending solution 1 ..... a - b
+const ascNums = (array) => {
+    if(!array.length) return;
+    return array.sort((a, b) => a - b);
+}
+// descending solution 1 ..... a - b.reverse()
+const descNums = (array) => {
+    if(!array.length) return;
+    return array.sort((a, b) => a - b).reverse();
+}
+// descending solution 2 ..... b - a
+const descNumsTwo = (array) => {
+    if(!array.length) return;
+    return array.sort((a, b) => b - a);
+}
+console.log(ascNums(alphaArrayThree));
+console.log(descNumsTwo(alphaArrayThree));
+console.log(descNums(alphaArrayThree));
+
+//sort an array of numbers and strings. 
+const numsAndStrings = (array) => {
+    if(!array.length) return;
+    const strArray = [];
+    const numArray = [];
+    array.forEach(element => {
+        isNaN(element) ? strArray.push(element) : numArray.push(element);
+    });
+    // by default sort will alphabetize strings. 
+    strArray.sort();
+    numArray.sort((a, b) => a - b);
+    return [...numArray, ...strArray];
+}
+console.log(numsAndStrings(alphaArrayTwo));
 
 
-"""
-# pounds to kilos. 
-weight_lbs = input('how much do you weigh in pounds? ')
-weight_kg = int(weight_lbs) * 0.45
-print('your weight in kilograms is ---> ',weight_kg)
+//define a function that takes in an array of nums and strs and returns the most commonly occuring STRING. 
 
-# email formatting
-email = '''
-Hello, 
+// E6 answer which is more modern and readable. *** But doesnt allow for ties ***
+const mostCommonStr = (array) => {
+    if(!array.length) return;
+    const arr = [...array];
+    return arr.sort((a, b) => arr.filter(str => str === a).length - arr.filter(str => str === b).length).pop();
+}
 
-I am writing this email to confirm **insert email jargon**
-We would like to say x y and z, please continue. 
-For now, you can go into the back and...
-Beneath the shelf there is a thing that will 
+console.log(mostCommonStr(alphaArrayFour));
 
-Thanks,
-The Watchers
-'''
 
-# string formatting
-thrash = 'Exodus'
-death = 'Obituary'
-black = 'Darkthrone'
-doom = 'Saint Vitus'
-message_one = f'{doom} was an early example of Doom Metal. From Norway we have {black}. '
-message_two = f'{death} has a great song called Threatening Skies. {thrash} are from the Bay Area.'
-print(message_one, message_two)
+// a way that accounts for ties. BUT object keys always convert nums to strings, just an FYI. They still get counted, but they'll be converted. 
+const mostCommonElement = (array) => {
+    if(!array.length) return; // if its an empty array, return statement to break out of the function. 
+    const counterObject = {}; // create a counter object to house the iterative data from the initial array
+    array.forEach(element => { // loop over each item in the array and if it exists, give it a count by 1. (keeps running total of the key [0] and value/count [1])
+        counterObject[element] ? counterObject[element] += 1 : counterObject[element] = 1;
+    });
+    const sortedArray = [];
+    Object.keys(counterObject).forEach(key => {
+        sortedArray.push( [key, counterObject[key]] );
+    });
+    sortedArray.sort((a, b) => a[1] - b[1]);
+    const maxCount = sortedArray[sortedArray.length - 1][1];
+    const resultArray = []; // just prints the element, no count. 
+    sortedArray.forEach(arr => {
+        if(arr[1] === maxCount) {
+            resultArray.push(arr[0]);
+        }
+    });
+    return resultArray;
+}
+console.log(mostCommonElement(alphaArrayFour));
 
-# string methods
-random_lyrics = 'A great exaltation of the infernal cabal is torched across the blazing skies. We behold the serpent dawn as the fires consume the horizon.'
-print(len(random_lyrics))
-# does NOT change the original variable.
-print(random_lyrics.upper())
-# the original variable. 
-print(random_lyrics)
-# prints / returns the index of the first occurence of i
-print(random_lyrics.find('i'))
-# replaces things via feeding in arguments. 
-print(random_lyrics.replace('infernal', 'BLACKENED'))
-"""
+const resultArray = sortedArray.filter(arr => arr[1] === maxCount);
+
+// count occurences of every word in the string. REGEX NIGHTMARE
+const countAllWords = (string) => {
+    if(!string.length) return;
+    const wordArray = string.toLowerCase().replace(/([.!?,:;@+=~|"'><^%&()])/g, '').replace(/[\s]{2,}/g, ' ').split(' ');
+    const counterObject = {};
+    wordArray.forEach(word => {
+        counterObject[word] ? counterObject[word] += 1 : counterObject[word] = 1;
+    });
+
+    return counterObject;
+}
+console.log(countAllWords(occStr));
+
+// only return the HIGHEST OCCURING WORD. 
+const highestWord = (string) => {
+    if(!string.length) return;
+    const highestWordArray = string.toLowerCase().replace(/([.!?,:;@+=~|"'><^%&()])/g, '').replace(/[\s]{2,}/g, ' ').split(' ');
+    return mostCommonElement(highestWordArray);
+}
+console.log(highestWord(occStr));
+
